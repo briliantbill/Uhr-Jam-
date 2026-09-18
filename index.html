@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Die Uhrzeit — Belajar Jam Bahasa Jerman A1</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="kopf">
+  <div class="kopf-inner">
+    <h1>Die Uhrzeit</h1>
+    <p class="kopf-sub">Belajar menyebut jam dalam Bahasa Jerman &middot; Level A1</p>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button class="tab is-aktiv" data-tab="uhr">Die Uhr</button>
+    <button class="tab" data-tab="ueben">Üben</button>
+    <button class="tab" data-tab="erklaerung">Erklärung</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============================================================
+     TAB 1 — JAM INTERAKTIF
+     ============================================================ -->
+<section class="panel is-aktiv" id="tab-uhr">
+
+  <p class="hinweis">
+    Geser <strong>jarum jam</strong> atau <strong>jarum menit</strong> dengan jari atau mouse.
+    Kalimat Jermannya berubah otomatis.
+  </p>
+
+  <div class="uhr-buehne">
+    <div id="uhr-haupt" class="uhr-mount"></div>
+  </div>
+
+  <div class="uhr-steuerung">
+    <div class="tageszeit" id="tageszeit">
+      <button class="tz-btn is-aktiv" data-periode="am">vormittags<small>00:00 – 11:59</small></button>
+      <button class="tz-btn" data-periode="pm">nachmittags<small>12:00 – 23:59</small></button>
+    </div>
+
+    <div class="schnellwahl">
+      <button data-schritt="-60" class="mini-btn">&minus;1 Std.</button>
+      <button data-schritt="-5"  class="mini-btn">&minus;5 Min.</button>
+      <button data-schritt="5"   class="mini-btn">+5 Min.</button>
+      <button data-schritt="60"  class="mini-btn">+1 Std.</button>
+      <button id="btn-jetzt" class="mini-btn mini-btn--akzent">Jetzt</button>
+    </div>
+  </div>
+
+  <div class="digital-anzeige" id="digital">07:30</div>
+
+  <div class="satz-karten">
+    <div class="satz-karte satz-karte--inoffiziell">
+      <span class="satz-label">inoffiziell <em>— sehari-hari</em></span>
+      <p class="satz" id="satz-inoffiziell">&nbsp;</p>
+    </div>
+    <div class="satz-karte satz-karte--offiziell">
+      <span class="satz-label">offiziell <em>— jadwal, stasiun, TV</em></span>
+      <p class="satz" id="satz-offiziell">&nbsp;</p>
+    </div>
+  </div>
+
+  <div class="legende">
+    <span class="legende-titel">Kata kunci:</span>
+    <span class="chip kw-nach">nach</span><span class="chip-arti">lewat</span>
+    <span class="chip kw-vor">vor</span><span class="chip-arti">kurang</span>
+    <span class="chip kw-viertel">Viertel</span><span class="chip-arti">seperempat</span>
+    <span class="chip kw-halb">halb</span><span class="chip-arti">setengah</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     TAB 2 — LATIHAN
+     ============================================================ -->
+<section class="panel" id="tab-ueben">
+
+  <!-- Panel pemilihan mode & level -->
+  <div id="uebung-setup">
+    <h2 class="abschnitt-titel">1. Pilih jenis latihan</h2>
+    <div class="modus-liste" id="modus-liste">
+      <button class="modus-karte is-gewaehlt" data-modus="1">
+        <span class="modus-nr">Modus 1</span>
+        <strong>Wie spät ist es?</strong>
+        <small>Lihat jam &rarr; pilih kalimat yang benar</small>
+      </button>
+      <button class="modus-karte" data-modus="2">
+        <span class="modus-nr">Modus 2</span>
+        <strong>Stell die Uhr!</strong>
+        <small>Baca kalimat &rarr; geser jarum jam</small>
+      </button>
+      <button class="modus-karte" data-modus="3">
+        <span class="modus-nr">Modus 3</span>
+        <strong>Umrechnen</strong>
+        <small>Ubah offiziell &harr; inoffiziell (ketik)</small>
+      </button>
+      <button class="modus-karte" data-modus="4">
+        <span class="modus-nr">Modus 4</span>
+        <strong>Wann …?</strong>
+        <small>Latihan beda <em>Es ist…</em> dan <em>Um…</em></small>
+      </button>
+    </div>
+
+    <h2 class="abschnitt-titel">2. Pilih tingkat kesulitan</h2>
+    <div class="level-liste" id="level-liste">
+      <button class="level-btn is-gewaehlt" data-level="1">
+        <strong>Level 1</strong><small>jam bulat, :15, :30, :45</small>
+      </button>
+      <button class="level-btn" data-level="2">
+        <strong>Level 2</strong><small>+ :05 :10 :20 :40 :50 :55</small>
+      </button>
+      <button class="level-btn" data-level="3">
+        <strong>Level 3</strong><small>+ :25 dan :35 (tersulit)</small>
+      </button>
+      <button class="level-btn" data-level="4">
+        <strong>Level 4</strong><small>campuran + konversi sistem</small>
+      </button>
+    </div>
+
+    <div id="system-wahl-wrap">
+      <h2 class="abschnitt-titel">3. Sistem yang dilatih</h2>
+      <div class="system-liste" id="system-liste">
+        <button class="system-btn is-gewaehlt" data-system="inoffiziell">inoffiziell</button>
+        <button class="system-btn" data-system="offiziell">offiziell</button>
+        <button class="system-btn" data-system="gemischt">campur</button>
+      </div>
+    </div>
+
+    <button class="start-btn" id="btn-start">Los geht's! &rarr;</button>
+  </div>
+
+  <!-- Panel soal -->
+  <div id="uebung-lauf" hidden>
+    <div class="lauf-kopf">
+      <button class="zurueck-btn" id="btn-zurueck">&larr; Ganti latihan</button>
+      <div class="punkte">
+        <span id="punkte-text">0 / 0</span>
+        <div class="punkte-balken"><div id="punkte-fuell"></div></div>
+      </div>
+    </div>
+
+    <div class="frage-kopf">
+      <span class="frage-nr" id="frage-nr">Aufgabe 1</span>
+      <h2 class="frage-text" id="frage-text"></h2>
+      <p class="frage-hilfe" id="frage-hilfe"></p>
+    </div>
+
+    <div id="frage-buehne"></div>
+    <div id="antwort-buehne"></div>
+
+    <div class="feedback" id="feedback" hidden></div>
+
+    <div class="lauf-aktionen">
+      <button class="pruef-btn" id="btn-pruefen" hidden>Prüfen</button>
+      <button class="weiter-btn" id="btn-weiter" hidden>Weiter &rarr;</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TAB 3 — PENJELASAN (Bahasa Indonesia)
+     ============================================================ -->
+<section class="panel" id="tab-erklaerung">
+
+  <article class="lektion">
+    <h2>1. Dua cara bertanya</h2>
+    <p>Keduanya artinya sama persis: <em>“Jam berapa sekarang?”</em></p>
+    <div class="frage-paar">
+      <div class="frage-box"><strong>Wie spät ist es?</strong><small>paling sering dipakai</small></div>
+      <div class="gleich">=</div>
+      <div class="frage-box"><strong>Wie viel Uhr ist es?</strong><small>sama umumnya</small></div>
+    </div>
+    <p>Jawabannya selalu diawali <strong>Es ist …</strong></p>
+  </article>
+
+  <article class="lektion">
+    <h2>2. Dua sistem penyebutan</h2>
+    <div class="zwei-spalten">
+      <div class="spalte spalte--inoffiziell">
+        <h3>inoffiziell</h3>
+        <p class="spalte-tag">Sehari-hari, ngobrol, 12 jam</p>
+        <p class="bsp">Es ist <span class="kw-viertel">Viertel</span> <span class="kw-vor">vor</span> drei.</p>
+        <p>Pakai kata <em>nach, vor, Viertel, halb</em>. Tidak menyebut angka menit.</p>
+      </div>
+      <div class="spalte spalte--offiziell">
+        <h3>offiziell</h3>
+        <p class="spalte-tag">Jadwal kereta, stasiun, TV, sekolah, 24 jam</p>
+        <p class="bsp">Es ist vierzehn Uhr fünfundvierzig.</p>
+        <p>Angkanya dibaca apa adanya: <em>[jam] Uhr [menit]</em>.</p>
+      </div>
+    </div>
+    <p class="notiz">Dua-duanya menyebut waktu yang sama: <strong>14:45</strong>.</p>
+  </article>
+
+  <article class="lektion">
+    <h2>3. Empat kata kunci</h2>
+    <div class="kw-gitter">
+      <div class="kw-karte"><span class="chip kw-nach">nach</span><strong>lewat / setelah</strong>
+        <small>7:10 = zehn <span class="kw-nach">nach</span> sieben<br>(sepuluh lewat tujuh)</small></div>
+      <div class="kw-karte"><span class="chip kw-vor">vor</span><strong>kurang / sebelum</strong>
+        <small>7:50 = zehn <span class="kw-vor">vor</span> acht<br>(delapan kurang sepuluh)</small></div>
+      <div class="kw-karte"><span class="chip kw-viertel">Viertel</span><strong>seperempat = 15 menit</strong>
+        <small>7:15 = <span class="kw-viertel">Viertel</span> <span class="kw-nach">nach</span> sieben</small></div>
+      <div class="kw-karte"><span class="chip kw-halb">halb</span><strong>setengah = 30 menit</strong>
+        <small>7:30 = <span class="kw-halb">halb</span> acht</small></div>
+    </div>
+  </article>
+
+  <article class="lektion falle falle--gross">
+    <div class="falle-kopf">⚠️ JEBAKAN TERBESAR</div>
+    <p class="falle-formel">
+      <span class="kw-halb">halb</span> acht = <strong class="richtig">7:30</strong>
+      <span class="falsch-tag">BUKAN 8:30</span>
+    </p>
+    <p>Dalam bahasa Jerman, <em>halb</em> menunjuk ke jam yang <strong>sedang dituju</strong>,
+       bukan jam yang sudah lewat. “halb acht” = “setengah jalan menuju jam 8”.</p>
+
+    <div class="trost">
+      <h3>Kabar baik untuk murid Indonesia</h3>
+      <p>Ini <strong>sama persis dengan bahasa Indonesia!</strong></p>
+      <table class="vergleich">
+        <tr><th>Bahasa</th><th>Ucapan</th><th>Artinya</th></tr>
+        <tr class="ok"><td><strong>Jerman</strong></td><td>halb acht</td><td>7:30 ✔</td></tr>
+        <tr class="ok"><td><strong>Indonesia</strong></td><td>setengah delapan</td><td>7:30 ✔</td></tr>
+        <tr class="beda"><td><strong>Inggris</strong></td><td>half past eight</td><td>8:30 ✘ (beda!)</td></tr>
+      </table>
+      <p class="trost-schluss">Jadi murid Indonesia justru <strong>lebih mudah</strong> daripada
+        murid berbahasa Inggris. Tinggal pakai logika “setengah delapan” yang sudah Anda punya.</p>
+    </div>
+  </article>
+
+  <article class="lektion falle">
+    <div class="falle-kopf">⚠️ JEBAKAN KEDUA — :25 dan :35</div>
+    <p>Di menit 25 dan 35, patokannya <strong>bukan jam penuh</strong>, melainkan kata
+       <span class="kw-halb">halb</span>.</p>
+    <div class="halb-achse">
+      <div class="achse-punkt">
+        <span class="achse-zeit">7:25</span>
+        <span class="achse-de"><span class="kw-vor">fünf vor</span> <span class="kw-halb">halb</span> acht</span>
+        <span class="achse-id">5 menit <strong>sebelum</strong> setengah delapan</span>
+      </div>
+      <div class="achse-punkt achse-punkt--mitte">
+        <span class="achse-zeit">7:30</span>
+        <span class="achse-de"><span class="kw-halb">halb</span> acht</span>
+        <span class="achse-id">setengah delapan</span>
+      </div>
+      <div class="achse-punkt">
+        <span class="achse-zeit">7:35</span>
+        <span class="achse-de"><span class="kw-nach">fünf nach</span> <span class="kw-halb">halb</span> acht</span>
+        <span class="achse-id">5 menit <strong>setelah</strong> setengah delapan</span>
+      </div>
+    </div>
+    <p class="notiz">Padanan Indonesianya: <strong>“setengah delapan kurang lima”</strong> (7:25)
+      dan <strong>“setengah delapan lewat lima”</strong> (7:35).</p>
+    <p class="warn-klein">Kesalahan umum: mengira <em>fünf vor halb acht</em> = 7:55.
+      Salah — <em>vor</em> di situ mengacu ke <em>halb</em>, bukan ke <em>acht</em>.</p>
+  </article>
+
+  <article class="lektion">
+    <h2>6. <em>Es ist…</em> atau <em>Um…</em>?</h2>
+    <p>Bentuk jawaban tergantung pertanyaannya.</p>
+    <div class="zwei-spalten">
+      <div class="spalte spalte--esist">
+        <h3>Wie spät ist es?</h3>
+        <p class="spalte-tag">“Jam berapa sekarang?” — menyebut waktu saat ini</p>
+        <p class="bsp"><strong>Es ist</strong> <span class="kw-viertel">Viertel</span> <span class="kw-nach">nach</span> acht.</p>
+      </div>
+      <div class="spalte spalte--um">
+        <h3>Wann …?</h3>
+        <p class="spalte-tag">“Kapan?” — menyebut waktu suatu kegiatan</p>
+        <p class="bsp"><strong>Um</strong> <span class="kw-viertel">Viertel</span> <span class="kw-nach">nach</span> acht.</p>
+      </div>
+    </div>
+    <ul class="bsp-liste">
+      <li><span class="q">Wann beginnt der Kurs?</span> — <span class="a">Um acht Uhr.</span></li>
+      <li><span class="q">Wann stehst du auf?</span> — <span class="a">Um <span class="kw-halb">halb</span> sechs.</span></li>
+      <li><span class="q">Wie spät ist es?</span> — <span class="a">Es ist <span class="kw-halb">halb</span> sechs.</span></li>
+    </ul>
+    <p class="warn-klein">Ingat: <em>Um</em> tidak pernah dipakai untuk menjawab <em>Wie spät ist es?</em></p>
+  </article>
+
+  <article class="lektion">
+    <h2>7. Tabel referensi — satu jam penuh</h2>
+    <p>Hafalkan pola ini sekali, lalu berlaku untuk semua jam.</p>
+    <div class="tabelle-wrap">
+      <table class="uhrzeit-tabelle" id="referenz-tabelle">
+        <thead>
+          <tr><th>Jam</th><th>inoffiziell</th><th>offiziell (19:xx)</th><th>Indonesia</th></tr>
+        </thead>
+        <tbody><!-- diisi otomatis oleh main.js dari timeToGerman.js --></tbody>
+      </table>
+    </div>
+    <p class="notiz">Perhatikan: mulai <strong>7:25</strong> ke bawah, angka yang disebut sudah
+      <strong>acht</strong> (jam berikutnya), bukan <em>sieben</em> lagi.</p>
+  </article>
+
+</section>
+
+</main>
+
+<script src="js/timeToGerman.js"></script>
+<script src="js/clock.js"></script>
+<script src="js/exercises.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

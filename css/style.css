@@ -1,0 +1,469 @@
+/* ============================================================
+   style.css — Die Uhrzeit A1
+   Semua warna utama ada di :root, jadi mudah diubah dari satu tempat.
+   ============================================================ */
+
+:root {
+  /* Warna kata kunci — konsisten di seluruh aplikasi */
+  --c-nach:    #1565d8;   /* nach    = biru  */
+  --c-vor:     #d62828;   /* vor     = merah */
+  --c-halb:    #0f8a5f;   /* halb    = hijau */
+  --c-viertel: #7b3fd4;   /* Viertel = ungu  */
+
+  /* Warna jarum — sengaja beda dari warna kata kunci */
+  --c-stunde: #ef6c00;    /* jarum jam   (pendek) */
+  --c-minute: #0f7b8a;    /* jarum menit (panjang) */
+
+  --bg:        #f4f6fb;
+  --karte:     #ffffff;
+  --tinte:     #1b2330;
+  --tinte-mild:#5b6779;
+  --rand:      #dfe4ee;
+  --akzent:    #2f4bd8;
+  --ok:        #0f8a5f;
+  --falsch:    #d62828;
+
+  --radius: 16px;
+  --schatten: 0 2px 10px rgba(20, 30, 60, .07);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--tinte);
+  font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+}
+
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 18px 16px 60px;
+}
+
+/* ---------------- Header & tab ---------------- */
+.kopf {
+  background: linear-gradient(135deg, #1d2b64, #2f4bd8);
+  color: #fff;
+  padding: 22px 16px 0;
+  position: sticky; top: 0; z-index: 20;
+  box-shadow: 0 2px 14px rgba(20, 30, 60, .18);
+}
+.kopf-inner { max-width: 900px; margin: 0 auto; }
+.kopf h1 { margin: 0; font-size: 1.9rem; letter-spacing: .3px; }
+.kopf-flagge { font-size: 1.4rem; }
+.kopf-sub { margin: 4px 0 14px; opacity: .85; font-size: .95rem; }
+
+.tabs {
+  max-width: 900px; margin: 0 auto;
+  display: flex; gap: 6px;
+}
+.tab {
+  flex: 1;
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  border: 0;
+  border-radius: 12px 12px 0 0;
+  padding: 13px 8px;
+  font-size: 1.02rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .15s;
+}
+.tab:hover { background: rgba(255,255,255,.22); }
+.tab.is-aktiv { background: var(--bg); color: var(--tinte); }
+
+.panel { display: none; animation: auf .25s ease; }
+.panel.is-aktiv { display: block; }
+@keyframes auf { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; } }
+
+/* ---------------- Jam ---------------- */
+.hinweis {
+  background: #eef2ff;
+  border-left: 4px solid var(--akzent);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 4px 0 16px;
+  font-size: .96rem;
+  color: #2c3550;
+}
+
+.uhr-buehne { display: flex; justify-content: center; }
+
+.uhr-mount {
+  width: min(92vw, 430px);
+  max-width: 100%;
+}
+.uhr-mount--klein { width: min(72vw, 320px); }
+
+.uhr-svg { width: 100%; height: auto; display: block; }
+/* touch-action: none WAJIB supaya menggeser jarum di HP tidak menggeser halaman */
+.uhr-svg--aktiv { touch-action: none; cursor: grab; }
+.uhr-svg--aktiv.is-dragging { cursor: grabbing; }
+
+.uhr-aussen  { fill: #e7ecf7; }
+.uhr-flaeche { fill: #fff; stroke: #c9d2e4; stroke-width: 3; transition: stroke .2s, fill .2s; }
+.uhr-flaeche.ist-ok     { stroke: var(--ok);     stroke-width: 6; fill: #f2fbf7; }
+.uhr-flaeche.ist-falsch { stroke: var(--falsch); stroke-width: 6; fill: #fdf4f4; }
+
+.uhr-strich { stroke: #b8c2d6; stroke-width: 2; stroke-linecap: round; }
+.uhr-strich--gross { stroke: #6c7a92; stroke-width: 4; }
+
+.uhr-viertelmarke { fill: #eef2ff; }
+
+.uhr-zahl {
+  font-size: 30px; font-weight: 600; fill: #33405a;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+.uhr-zahl--haupt { font-size: 36px; font-weight: 800; fill: #1d2b64; }
+
+.uhr-minutenzahl { font-size: 17px; fill: #9aa6bd; font-weight: 600; }
+
+.jarum-linie { stroke-linecap: round; }
+.jarum-stunde .jarum-linie { stroke: var(--c-stunde); stroke-width: 15; }
+.jarum-minute .jarum-linie { stroke: var(--c-minute); stroke-width: 10; }
+/* garis tak terlihat yang lebih tebal = area sentuh lebih mudah dikenai jari */
+.jarum-hit { stroke: transparent; stroke-width: 44; }
+.jarum { transition: transform .12s ease-out; }
+.is-dragging .jarum { transition: none; }
+.jarum.is-active .jarum-linie { filter: drop-shadow(0 0 6px rgba(0,0,0,.28)); }
+
+.jarum-label-text { font-size: 15px; font-weight: 700; fill: #fff; }
+.label-stunde .jarum-label-bg { fill: var(--c-stunde); }
+.label-minute .jarum-label-bg { fill: var(--c-minute); }
+.jarum-label { pointer-events: none; }
+
+.uhr-mitte { fill: #33405a; }
+.uhr-mitte-innen { fill: #fff; }
+
+/* ---------------- Kontrol jam ---------------- */
+.uhr-steuerung {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  margin-top: 6px;
+}
+
+.tageszeit { display: flex; gap: 8px; }
+.tz-btn {
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--karte); border: 2px solid var(--rand);
+  border-radius: 12px; padding: 8px 18px;
+  font-size: 1rem; font-weight: 600; font-family: inherit;
+  color: var(--tinte-mild); cursor: pointer; transition: .15s;
+}
+.tz-btn small { font-weight: 400; font-size: .78rem; opacity: .75; }
+.tz-btn.is-aktiv { border-color: var(--akzent); background: #eef2ff; color: var(--akzent); }
+
+.schnellwahl { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; }
+.mini-btn {
+  background: var(--karte); border: 1px solid var(--rand); border-radius: 10px;
+  padding: 9px 13px; font-size: .95rem; font-family: inherit; font-weight: 600;
+  color: var(--tinte-mild); cursor: pointer; transition: .15s;
+}
+.mini-btn:hover { border-color: var(--akzent); color: var(--akzent); }
+.mini-btn--akzent { background: var(--akzent); color: #fff; border-color: var(--akzent); }
+.mini-btn--akzent:hover { color: #fff; opacity: .9; }
+
+.digital-anzeige {
+  text-align: center;
+  font-size: 2.6rem; font-weight: 800; letter-spacing: 2px;
+  font-variant-numeric: tabular-nums;
+  color: #1d2b64;
+  margin: 16px 0 10px;
+}
+
+/* ---------------- Kartu kalimat ---------------- */
+.satz-karten { display: grid; gap: 12px; }
+.satz-karte {
+  background: var(--karte); border-radius: var(--radius);
+  box-shadow: var(--schatten); padding: 14px 18px;
+  border-left: 6px solid var(--rand);
+}
+.satz-karte--inoffiziell { border-left-color: var(--c-halb); }
+.satz-karte--offiziell   { border-left-color: var(--akzent); }
+.satz-label {
+  display: block; font-size: .8rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .6px; color: var(--tinte-mild);
+}
+.satz-label em { font-weight: 400; text-transform: none; letter-spacing: 0; }
+.satz { margin: 4px 0 0; font-size: 1.55rem; font-weight: 700; line-height: 1.3; }
+
+/* ---------------- Warna kata kunci (dipakai di mana-mana) ---------------- */
+.kw-nach    { color: var(--c-nach);    font-weight: 800; }
+.kw-vor     { color: var(--c-vor);     font-weight: 800; }
+.kw-halb    { color: var(--c-halb);    font-weight: 800; }
+.kw-viertel { color: var(--c-viertel); font-weight: 800; }
+
+.legende {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  margin-top: 16px; font-size: .92rem; color: var(--tinte-mild);
+}
+.legende-titel { font-weight: 700; margin-right: 4px; }
+.chip {
+  display: inline-block; padding: 3px 11px; border-radius: 999px;
+  font-weight: 700; font-size: .9rem; color: #fff;
+}
+.chip.kw-nach    { background: var(--c-nach);    color: #fff; }
+.chip.kw-vor     { background: var(--c-vor);     color: #fff; }
+.chip.kw-halb    { background: var(--c-halb);    color: #fff; }
+.chip.kw-viertel { background: var(--c-viertel); color: #fff; }
+.chip-arti { margin-right: 12px; font-style: italic; }
+
+/* ============================================================
+   LATIHAN
+   ============================================================ */
+.abschnitt-titel { font-size: 1.05rem; margin: 20px 0 10px; color: var(--tinte-mild); }
+
+.modus-liste { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.modus-karte {
+  text-align: left; background: var(--karte); border: 2px solid var(--rand);
+  border-radius: var(--radius); padding: 13px 14px; cursor: pointer;
+  font-family: inherit; color: var(--tinte); transition: .15s;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.modus-karte:hover { border-color: #b9c4dd; }
+.modus-karte.is-gewaehlt { border-color: var(--akzent); background: #eef2ff; }
+.modus-nr { font-size: .72rem; font-weight: 800; letter-spacing: .8px;
+            text-transform: uppercase; color: var(--akzent); }
+.modus-karte strong { font-size: 1.08rem; }
+.modus-karte small { color: var(--tinte-mild); line-height: 1.35; }
+
+.level-liste { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.level-btn {
+  background: var(--karte); border: 2px solid var(--rand); border-radius: 12px;
+  padding: 11px 12px; cursor: pointer; font-family: inherit; text-align: left;
+  display: flex; flex-direction: column; color: var(--tinte); transition: .15s;
+}
+.level-btn small { color: var(--tinte-mild); font-size: .82rem; }
+.level-btn.is-gewaehlt { border-color: var(--c-halb); background: #effaf5; }
+
+.system-liste { display: flex; gap: 8px; flex-wrap: wrap; }
+.system-btn {
+  background: var(--karte); border: 2px solid var(--rand); border-radius: 999px;
+  padding: 9px 20px; font-family: inherit; font-weight: 600; font-size: 1rem;
+  cursor: pointer; color: var(--tinte-mild); transition: .15s;
+}
+.system-btn.is-gewaehlt { border-color: var(--akzent); background: #eef2ff; color: var(--akzent); }
+
+.start-btn {
+  display: block; width: 100%; margin-top: 24px;
+  background: var(--akzent); color: #fff; border: 0; border-radius: 14px;
+  padding: 16px; font-size: 1.15rem; font-weight: 700; font-family: inherit;
+  cursor: pointer; box-shadow: 0 4px 14px rgba(47, 75, 216, .28);
+}
+.start-btn:hover { opacity: .93; }
+
+/* ---------------- Panel soal ---------------- */
+.lauf-kopf { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.zurueck-btn {
+  background: none; border: 0; color: var(--tinte-mild); font-family: inherit;
+  font-size: .92rem; cursor: pointer; padding: 6px 0; white-space: nowrap;
+}
+.zurueck-btn:hover { color: var(--akzent); }
+.punkte { margin-left: auto; text-align: right; min-width: 110px; }
+.punkte span { font-weight: 700; font-size: .95rem; }
+.punkte-balken { height: 7px; background: var(--rand); border-radius: 99px; overflow: hidden; margin-top: 4px; }
+#punkte-fuell { height: 100%; width: 0; background: var(--ok); transition: width .3s; }
+
+.frage-kopf { text-align: center; margin-bottom: 14px; }
+.frage-nr { font-size: .78rem; font-weight: 800; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--akzent); }
+.frage-text { font-size: 1.7rem; margin: 6px 0 4px; line-height: 1.3; }
+.frage-hilfe { margin: 0; font-size: .95rem; color: var(--tinte-mild); }
+.gross-digital {
+  display: inline-block; font-size: 3rem; font-weight: 800; letter-spacing: 3px;
+  font-variant-numeric: tabular-nums; color: #1d2b64;
+  background: var(--karte); border-radius: 14px; padding: 10px 26px;
+  box-shadow: var(--schatten);
+}
+
+#frage-buehne { display: flex; flex-direction: column; align-items: center; }
+.tageszeit-hinweis { margin: 2px 0 0; font-size: .95rem; color: var(--tinte-mild); font-weight: 600; }
+
+.optionen { display: grid; gap: 10px; margin-top: 18px; }
+.option-btn {
+  background: var(--karte); border: 2px solid var(--rand); border-radius: 14px;
+  padding: 15px 16px; font-size: 1.2rem; font-family: inherit; font-weight: 600;
+  color: var(--tinte); cursor: pointer; text-align: left; transition: .15s;
+}
+.option-btn:hover { border-color: var(--akzent); }
+.ist-gesperrt .option-btn { cursor: default; }
+.ist-gesperrt .option-btn:hover { border-color: var(--rand); }
+.option-btn.ist-richtig { border-color: var(--ok); background: #effaf5; }
+.option-btn.ist-falsch  { border-color: var(--falsch); background: #fdf2f2; }
+
+.stell-anzeige { text-align: center; font-size: 1.05rem; color: var(--tinte-mild); margin: 10px 0 0; }
+
+/* Penanda pagi/sore pada soal konversi — penting, karena kalimat
+   inoffiziell tidak membedakan 05:20 dan 17:20. */
+.tag-tageszeit {
+  display: inline-block; margin-top: 8px;
+  padding: 5px 14px; border-radius: 999px;
+  font-weight: 700; font-size: .95rem;
+}
+.tag-tageszeit--am { background: #fff4d6; color: #8a5a00; border: 1px solid #ffdf9e; }
+.tag-tageszeit--pm { background: #e7e9ff; color: #3b3f8a; border: 1px solid #c8ccff; }
+
+.tipp-feld { margin-top: 18px; }
+.tipp-input {
+  width: 100%; padding: 15px 16px; font-size: 1.25rem; font-family: inherit;
+  border: 2px solid var(--rand); border-radius: 14px; background: var(--karte);
+  color: var(--tinte); text-align: center;
+}
+.tipp-input:focus { outline: none; border-color: var(--akzent); }
+.tipp-input.ist-ok     { border-color: var(--ok);     background: #effaf5; }
+.tipp-input.ist-falsch { border-color: var(--falsch); background: #fdf2f2; }
+
+.feedback {
+  margin-top: 16px; border-radius: var(--radius); padding: 14px 16px;
+  font-size: 1.05rem; border-left: 6px solid;
+}
+.feedback--ok     { background: #effaf5; border-color: var(--ok); }
+.feedback--falsch { background: #fdf2f2; border-color: var(--falsch); }
+.feedback-kopf { font-weight: 800; font-size: 1.1rem; margin-bottom: 4px; }
+.feedback--ok .feedback-kopf     { color: var(--ok); }
+.feedback--falsch .feedback-kopf { color: var(--falsch); }
+.hinweis-regel { display: inline-block; margin-top: 6px; font-size: .95rem; color: var(--tinte-mild); }
+
+.lauf-aktionen { margin-top: 18px; }
+.pruef-btn, .weiter-btn {
+  display: block; width: 100%; border: 0; border-radius: 14px; padding: 16px;
+  font-size: 1.1rem; font-weight: 700; font-family: inherit; cursor: pointer; color: #fff;
+}
+.pruef-btn  { background: var(--akzent); }
+.weiter-btn { background: var(--ok); }
+.pruef-btn:hover, .weiter-btn:hover { opacity: .92; }
+
+.ergebnis { text-align: center; padding: 20px 0; }
+.ergebnis-zahl { font-size: 3.4rem; font-weight: 800; color: var(--akzent); line-height: 1; }
+.ergebnis-prozent { font-size: 1.3rem; font-weight: 700; color: var(--tinte-mild); }
+.ergebnis-text { font-size: 1.1rem; margin: 12px 0 0; }
+
+/* ============================================================
+   HALAMAN PENJELASAN
+   ============================================================ */
+.lektion {
+  background: var(--karte); border-radius: var(--radius); box-shadow: var(--schatten);
+  padding: 18px 20px; margin-bottom: 16px;
+}
+.lektion h2 { margin: 0 0 10px; font-size: 1.28rem; }
+.lektion h3 { margin: 0 0 6px; font-size: 1.05rem; }
+.lektion p { margin: 8px 0; }
+.notiz { background: #f0f3fa; border-radius: 10px; padding: 9px 13px; font-size: .95rem; }
+.warn-klein { font-size: .93rem; color: var(--tinte-mild); border-left: 3px solid var(--rand); padding-left: 12px; }
+
+.frage-paar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.frage-box {
+  flex: 1; min-width: 160px; background: #eef2ff; border-radius: 12px;
+  padding: 12px 14px; text-align: center;
+}
+.frage-box strong { font-size: 1.1rem; display: block; }
+.frage-box small { color: var(--tinte-mild); }
+.gleich { font-size: 1.6rem; font-weight: 800; color: var(--tinte-mild); }
+
+.zwei-spalten { display: grid; gap: 12px; }
+.spalte { border-radius: 12px; padding: 13px 15px; background: #f7f9fd; border-top: 4px solid var(--rand); }
+.spalte--inoffiziell { border-top-color: var(--c-halb); }
+.spalte--offiziell   { border-top-color: var(--akzent); }
+.spalte--esist       { border-top-color: var(--c-nach); }
+.spalte--um          { border-top-color: var(--c-viertel); }
+.spalte-tag { font-size: .88rem; color: var(--tinte-mild); margin: 2px 0 8px; }
+.bsp { font-size: 1.2rem; font-weight: 700; }
+
+.kw-gitter { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.kw-karte {
+  background: #f7f9fd; border-radius: 12px; padding: 12px;
+  display: flex; flex-direction: column; gap: 4px; align-items: flex-start;
+}
+.kw-karte small { color: var(--tinte-mild); line-height: 1.5; }
+
+/* ---------------- Kotak jebakan ---------------- */
+.falle { border: 2px solid #ffd9a8; background: #fffaf2; }
+.falle-kopf {
+  display: inline-block; background: #ff8c00; color: #fff; font-weight: 800;
+  padding: 5px 14px; border-radius: 999px; font-size: .9rem; letter-spacing: .5px;
+}
+.falle--gross { border-color: #ffbe6b; }
+.falle-formel {
+  font-size: 1.9rem; font-weight: 800; margin: 14px 0; line-height: 1.4;
+}
+.richtig { color: var(--ok); }
+.falsch-tag {
+  display: inline-block; background: #fdeaea; color: var(--falsch);
+  border: 2px dashed var(--falsch); border-radius: 10px;
+  padding: 2px 12px; font-size: 1.1rem; margin-left: 8px;
+}
+
+.trost { margin-top: 16px; background: #eefaf4; border-radius: 12px; padding: 14px 16px; }
+.trost h3 { color: var(--ok); }
+.vergleich { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: .97rem; }
+.vergleich th, .vergleich td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #d9e7e0; }
+.vergleich th { font-size: .82rem; text-transform: uppercase; color: var(--tinte-mild); letter-spacing: .5px; }
+.vergleich tr.ok td { background: #f4fdf8; font-weight: 600; }
+.vergleich tr.beda td { background: #fdf4f4; color: #8a3b3b; }
+.trost-schluss { font-size: 1.02rem; }
+
+.halb-achse { display: grid; gap: 10px; margin: 14px 0; }
+.achse-punkt {
+  background: #f7f9fd; border-radius: 12px; padding: 11px 14px;
+  display: flex; flex-direction: column; gap: 2px; border-left: 5px solid var(--rand);
+}
+.achse-punkt--mitte { border-left-color: var(--c-halb); background: #eefaf4; }
+.achse-zeit { font-weight: 800; font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+.achse-de { font-size: 1.15rem; font-weight: 700; }
+.achse-id { font-size: .92rem; color: var(--tinte-mild); }
+
+.bsp-liste { list-style: none; padding: 0; margin: 12px 0 0; }
+.bsp-liste li { padding: 9px 12px; background: #f7f9fd; border-radius: 10px; margin-bottom: 7px; }
+.bsp-liste .q { color: var(--tinte-mild); font-style: italic; }
+.bsp-liste .a { font-weight: 700; }
+
+/* ---------------- Tabel referensi ---------------- */
+.tabelle-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.uhrzeit-tabelle { width: 100%; border-collapse: collapse; font-size: .98rem; min-width: 540px; }
+.uhrzeit-tabelle th {
+  text-align: left; padding: 10px; background: #eef2ff; font-size: .8rem;
+  text-transform: uppercase; letter-spacing: .6px; color: #3b4a72;
+  position: sticky; top: 0;
+}
+.uhrzeit-tabelle td { padding: 9px 10px; border-bottom: 1px solid var(--rand); }
+.zelle-zeit { font-weight: 800; font-variant-numeric: tabular-nums; }
+.zelle-de { font-weight: 600; }
+.zelle-off { color: var(--tinte-mild); font-size: .92rem; }
+.zelle-id { color: var(--tinte-mild); font-size: .92rem; font-style: italic; }
+.zeile--knifflig td { background: #fffaf2; }
+.zeile--knifflig .zelle-zeit { color: #c26a00; }
+
+/* ============================================================
+   LAYAR LEBAR
+   ============================================================ */
+@media (min-width: 700px) {
+  body { font-size: 18px; }
+  .satz-karten { grid-template-columns: 1fr 1fr; }
+  .zwei-spalten { grid-template-columns: 1fr 1fr; }
+  .modus-liste { grid-template-columns: repeat(2, 1fr); }
+  .level-liste { grid-template-columns: repeat(4, 1fr); }
+  .kw-gitter { grid-template-columns: repeat(4, 1fr); }
+  .halb-achse { grid-template-columns: repeat(3, 1fr); }
+  .optionen { grid-template-columns: 1fr 1fr; }
+}
+
+/* ============================================================
+   LAYAR KECIL (HP)
+   ============================================================ */
+@media (max-width: 420px) {
+  .kopf h1 { font-size: 1.5rem; }
+  .tab { font-size: .92rem; padding: 11px 4px; }
+  .digital-anzeige { font-size: 2.1rem; }
+  .satz { font-size: 1.3rem; }
+  .frage-text { font-size: 1.4rem; }
+  .gross-digital { font-size: 2.4rem; padding: 8px 18px; }
+  .option-btn { font-size: 1.08rem; padding: 13px 14px; }
+  .modus-liste { grid-template-columns: 1fr; }
+  .falle-formel { font-size: 1.45rem; }
+  .falsch-tag { font-size: .95rem; margin-left: 0; display: block; margin-top: 6px; width: fit-content; }
+}
